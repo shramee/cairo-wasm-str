@@ -26,11 +26,9 @@ pub fn start() {
     crate::utils::set_panic_hook();
 }
 
-#[wasm_bindgen(js_name = runCairoProgram)]
 pub fn run_cairo_program() -> Result<(), JsError> {
-    const PROGRAM_JSON: &str = include_str!("./array_sum.json");
-
-    let program = Program::from_reader(Cursor::new(PROGRAM_JSON), Some("main"))?;
+#[wasm_bindgen]
+    let program = Program::from_reader(Cursor::new(program_json), Some("main"))?;
     let mut runner = CairoRunner::new(&program, "all", false)?;
     let mut vm = VirtualMachine::new(program.prime, false);
     let hint_processor = BuiltinHintProcessor::new_empty();
