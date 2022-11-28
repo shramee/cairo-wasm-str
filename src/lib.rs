@@ -26,8 +26,8 @@ pub fn start() {
     crate::utils::set_panic_hook();
 }
 
-pub fn run_cairo_program() -> Result<(), JsError> {
 #[wasm_bindgen]
+pub fn run_cairo_program( program_json: &str ) -> Result<String, JsError> {
     let program = Program::from_reader(Cursor::new(program_json), Some("main"))?;
     let mut runner = CairoRunner::new(&program, "all", false)?;
     let mut vm = VirtualMachine::new(program.prime, false);
@@ -38,7 +38,5 @@ pub fn run_cairo_program() -> Result<(), JsError> {
 
     let mut buffer = Cursor::new(Vec::new());
     runner.write_output(&mut vm, &mut buffer)?;
-    log(String::from_utf8(buffer.into_inner())?.as_str());
-
-    Ok(())
+    Ok(String::from_utf8(buffer.into_inner())?)
 }
